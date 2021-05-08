@@ -346,12 +346,12 @@ class BTreeNode implements Comparable<BTreeNode> {
         return object;
     }
 
-    public void addKey(TreeObject object) {
-        keys.add(object);
-    }
-
     public void addKey2(TreeObject object, int key) {
         keys.add(key, object);
+    }
+
+    public void addKey(TreeObject object) {
+        keys.add(object);
     }
 
     public TreeObject removeKey(int key) {
@@ -366,12 +366,12 @@ class BTreeNode implements Comparable<BTreeNode> {
         return child.get(key);
     }
 
-    public void addChild(int key) {
-        child.add(key);
-    }
-
     public void addChild2(Integer c, int key) {
         child.add(key, c);
+    }
+
+    public void addChild(int key) {
+        child.add(key);
     }
 
     public int removeChild(int key) {
@@ -390,24 +390,24 @@ class BTreeNode implements Comparable<BTreeNode> {
         return isLeaf;
     }
 
-    public int getOffset() {
-        return offset;
-    }
-
     public int getNumKeys() {
         return numKeys;
+    }
+
+    public int getOffset() {
+        return offset;
     }
 
     public void setNumKeys(int numKeys) {
         this.numKeys = numKeys;
     }
 
-    public void setLeaf(boolean isLeaf) {
-        this.isLeaf = isLeaf;
-    }
-
     public void setParent(int parent) {
         this.parent = parent;
+    }
+
+    public void setLeaf(boolean isLeaf) {
+        this.isLeaf = isLeaf;
     }
 
     public int getParent() {

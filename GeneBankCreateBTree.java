@@ -74,7 +74,52 @@ public class GeneBankCreateBTree {
 
 	}
 
-private static void printUsage() {
+  private static Long toLong(String code) {
+    String s = code.toLowerCase();
+    s = s.replaceAll("a", "00");
+    s = s.replaceAll("t", "11");
+    s = s.replaceAll("c", "01");
+    s = s.replaceAll("g", "10");
+    Long m = 1l;
+    m = m<<63;
+    return (Long.parseLong(s,2) | m);
+  }
+
+  private static void parser(String fileName, int length, BTree destination) throws FileNotFoundException {
+        int total = 0;
+        int lineNo = 1;
+        File fi = new File(fileName);
+        Scanner scan = new Scanner(fi);
+        boolean toggle = false;
+        Pattern p = Pattern.compile("(?i)(?=([actg]{"+length+"}))");
+        String prevChars = "";
+        while(scan.hasNextLine()) {
+          lineNo++;
+          String line = scan.nextLine().trim();
+          if(!toggle) {
+            if(line.equals("ORIGIN")) {
+              toggle = true;
+            }
+        } else {
+          if(line.equals("//")) {
+            toggle = false;
+            continue;
+          }
+          line = line.replaceAll("[\\s0-9]*", "");
+          Matcher m = p.matcher(prevChars+line);
+          while(m.find()) {
+            total++;
+
+          destination.insert(toLong(m.group(1)));
+        }
+        prevChars = line.substring(line.length() - length + 1,line.length());
+        }
+
+        }
+        System.out.println(total + " total matches.");
+  }
+
+  private static void printUsage() {
         System.err.println("Usage: java GeneBankCreateBTree <cache> <degree> <gbk file> <sequence length> [<debuglevel>]");
         System.err.println("<cache>: use  (0 for default)");
         System.err.println("<degree>: degree of the BTree (0 for default)");
@@ -82,48 +127,6 @@ private static void printUsage() {
         System.err.println("<sequence length>: 1-31");
         System.err.println("[<debug level>]: 0/1 (no/yes)");
         System.exit(1);
-    }
-    private static void parser(String fileName, int length, BTree destination) throws FileNotFoundException {
-          int total = 0;
-          int lineNo = 1;
-          File fi = new File(fileName);
-          Scanner scan = new Scanner(fi);
-          boolean toggle = false;
-          Pattern p = Pattern.compile("(?i)(?=([actg]{"+length+"}))");
-					String prevChars = "";
-          while(scan.hasNextLine()) {
-            lineNo++;
-            String line = scan.nextLine().trim();
-            if(!toggle) {
-              if(line.equals("ORIGIN")) {
-                toggle = true;
-              }
-          } else {
-            if(line.equals("//")) {
-              toggle = false;
-              continue;
-            }
-            line = line.replaceAll("[\\s0-9]*", "");
-            Matcher m = p.matcher(prevChars+line);
-            while(m.find()) {
-              total++;
+  }
 
-            destination.insert(toLong(m.group(1)));
-          }
-					prevChars = line.substring(line.length() - length + 1,line.length());
-          }
-
-          }
-          System.out.println(total + " total matches.");
-    }
-    private static Long toLong(String code) {
-      String s = code.toLowerCase();
-      s = s.replaceAll("a", "00");
-      s = s.replaceAll("t", "11");
-      s = s.replaceAll("c", "01");
-      s = s.replaceAll("g", "10");
-      Long m = 1l;
-      m = m<<63;
-      return (Long.parseLong(s,2) | m);
-    }
 }

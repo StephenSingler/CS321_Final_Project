@@ -13,16 +13,16 @@ public class TreeObject {
         this.freq = 1;
     }
 
+    public void increaseFreq() {
+        freq++;
+    }
+
     public Long getKey() {
         return this.key;
     }
 
     public int getFreq() {
         return this.freq;
-    }
-
-    public void increaseFreq() {
-        freq++;
     }
 
     public int compareTo(TreeObject obj) {
